@@ -15,15 +15,28 @@ class DiagramResponse {
   void sendDiagram( String uml)
   void sendMap( String uml)
 }
-abstract HttpServlet <|-- UmlDiagramService
-abstract HttpServlet <|-- MapServlet
-abstract HttpServlet <|-- ProxyServlet
-UmlDiagramService <|-- PngServlet
-UmlDiagramService <|-- SvgServlet
+
+abstract class HttpServlet
+abstract class HttpServlet
+abstract class HttpServlet
+
+HttpServlet <|-- UmlDiagramService
+HttpServlet <|-- CheckSyntaxServlet
+HttpServlet <|-- MapServlet
+HttpServlet <|-- LanguageServlet
+HttpServlet <|-- PlantUmlServlet
+HttpServlet <|-- ProxyServlet
+HttpServlet <|-- Welcome
+
+UmlDiagramService <|-- AsciiServlet
+UmlDiagramService <|-- Base64Servlet
 UmlDiagramService <|-- EpsServlet
 UmlDiagramService <|-- EpsTextServlet
-UmlDiagramService <|-- AsciiServlet
+UmlDiagramService <|-- ImgServlet
+UmlDiagramService <|-- SvgServlet
 UmlDiagramService o- DiagramResponse
+
+CheckSyntaxServlet o-- DiagramResponse
 MapServlet o-- DiagramResponse
 ProxyServlet o-- DiagramResponse
 @enduml
@@ -33,14 +46,17 @@ ProxyServlet o-- DiagramResponse
 
 @startuml
 title Generation of a PNG image illustrated
-PngServlet -> PngServlet : getSource()
-PngServlet -> UmlExtractor : getUmlSource()
-UmlExtractor --> PngServlet
-PngServlet -> PngServlet : getOutputFormat()
-PngServlet -> DiagramResponse : <<create>>
-PngServlet -> DiagramResponse : sendDiagram()
+
+ImgServlet -> ImgServlet : getSource()
+ImgServlet -> UmlExtractor : getUmlSource()
+UmlExtractor --> ImgServlet
+ImgServlet -> ImgServlet : getOutputFormat()
+ImgServlet -> DiagramResponse : <<create>>
+ImgServlet -> DiagramResponse : sendDiagram()
+
 participant "PlantUML library" as Lib #99FF99
+
 DiagramResponse -> Lib : generateImage()
 Lib --> DiagramResponse
-DiagramResponse --> PngServlet
+DiagramResponse --> ImgServlet
 @enduml
