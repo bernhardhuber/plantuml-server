@@ -48,7 +48,7 @@ public class LanguageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         final PrintStream ps = new PrintStream(response.getOutputStream());
-        response.setContentType("text/text");
+        response.setContentType("text/plain");
         new LanguageDescriptor().print(ps);
     }
 }
