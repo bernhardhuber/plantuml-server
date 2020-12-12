@@ -144,8 +144,8 @@ public class Example {
 
         public ExampleEntryPeristantStore() {
             examples = Arrays.asList(
-                    "@startuml\nBob -> Alice\n@enduml\n"
-                    + "@startuml\nclass Foo\nclass Bar\nFoo -> Bar\n@enduml\n");
+                    "@startuml\nBob -> Alice\n@enduml\n",
+                     "@startuml\nclass Foo\nclass Bar\nFoo -> Bar\n@enduml\n");
         }
 
         public List<String> allSnippets() {

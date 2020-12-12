@@ -136,8 +136,8 @@ public class Snippet {
 
         public SnippetEntryPeristantStore() {
             snippets = Arrays.asList(
-                    "skinparam monochrome true"
-                    + "skinparam handwritten true");
+                    "skinparam monochrome true",
+                     "skinparam handwritten true");
         }
 
         public List<String> allSnippets() {
