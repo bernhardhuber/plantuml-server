@@ -27,23 +27,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sourceforge.plantuml.OptionFlags;
 import net.sourceforge.plantuml.api.PlantumlUtils;
 import net.sourceforge.plantuml.code.NoPlantumlCompressionException;
 import net.sourceforge.plantuml.code.Transcoder;
 import net.sourceforge.plantuml.code.TranscoderUtil;
+import net.sourceforge.plantuml.servlet.bootstrap.Example.ExampleEntryRepository;
+import net.sourceforge.plantuml.servlet.bootstrap.Example.ExampleEntryRepositoryFactory;
+import net.sourceforge.plantuml.servlet.bootstrap.History.HistoryEntry;
+import net.sourceforge.plantuml.servlet.bootstrap.History.HistoryEntryRepository;
+import net.sourceforge.plantuml.servlet.bootstrap.Snippet.SnippetEntryRepository;
+import net.sourceforge.plantuml.servlet.bootstrap.Snippet.SnippetEntryRepositoryFactory;
 
 /*
  * Original idea from Achim Abeling for Confluence macro
@@ -71,16 +71,28 @@ public class PlantUmlServlet1 extends HttpServlet {
 
     private final EncodeDecoder encodeDecoder = new EncodeDecoder();
     private String forwardPath = "";
-    private HistoryEntryRepository historyEntryRepository = new HistoryEntryRepository();
+// Components
+    private ExampleEntryRepository exampleEntryRepository;
+    private HistoryEntryRepository historyEntryRepository;
+    private SnippetEntryRepository snippetEntryRepository;
 
     @Override
     public void init() throws ServletException {
         this.forwardPath = this.getInitParameter("forwardPath");
         if (this.forwardPath == null) {
-            this.forwardPath = "/bootstrap1/newjsp.jsp";
+            this.forwardPath = "/bootstrap/bootstrap1.jsp";
         }
 
-        this.getServletContext().setAttribute("historyEntryRepository", historyEntryRepository);
+        exampleEntryRepository = new ExampleEntryRepository();
+        new ExampleEntryRepositoryFactory().setupFromExampleEntryPeristantStore(exampleEntryRepository);
+        this.getServletContext().setAttribute("exampleEntryRepository", this.exampleEntryRepository);
+
+        historyEntryRepository = new HistoryEntryRepository();
+        this.getServletContext().setAttribute("historyEntryRepository", this.historyEntryRepository);
+
+        this.snippetEntryRepository = new SnippetEntryRepository();
+        new SnippetEntryRepositoryFactory().setupFromSnippetEntryPeristantStore(snippetEntryRepository);
+        this.getServletContext().setAttribute("snippetEntryRepository", this.snippetEntryRepository);
     }
 
     @Override
@@ -90,13 +102,20 @@ public class PlantUmlServlet1 extends HttpServlet {
         String text = request.getParameter("text");
         String encoded = DEFAULT_ENCODED_TEXT;
 
+        // history
         try {
             encoded = encodeDecoder.encode(text);
             HistoryEntry he = historyEntryRepository.add(encoded, text);
-            request.setAttribute("historyEntryList", this.historyEntryRepository.historyEntryList);
+            request.setAttribute("historyEntryList", this.historyEntryRepository.fetchAllHistoryEntry());
         } catch (IOException e) {
             this.log("doPost", e);
         }
+        // example
+        request.setAttribute("exampleEntryList", exampleEntryRepository.fetchAllExampleEntry());
+        // snippet
+        request.setAttribute("snippetEntryList", snippetEntryRepository.fetchAllSnippetEntry());
+
+        //---
         request.setAttribute("decoded", text);
         request.setAttribute("encoded", encoded);
 
@@ -124,80 +143,6 @@ public class PlantUmlServlet1 extends HttpServlet {
 
         Transcoder getTranscoder() {
             return TranscoderUtil.getDefaultTranscoder();
-        }
-    }
-
-    static class HistoryEntry {
-
-        private final String encoded;
-        private final String decoded;
-        private final java.time.LocalDateTime ldt;
-
-        public HistoryEntry(String aEncoded, String aDecoded) {
-            this(aEncoded, aDecoded, LocalDateTime.now());
-        }
-
-        public HistoryEntry(String aEncoded, String aDecoded, LocalDateTime aLdt) {
-            this.encoded = aEncoded;
-            this.decoded = aDecoded;
-            this.ldt = aLdt;
-        }
-
-        String[] defaultToEmpty() {
-            String[] result = new String[]{
-                this.encoded != null ? this.encoded : "",
-                this.decoded != null ? this.decoded : ""
-            };
-            return result;
-        }
-
-        @Override
-        public String toString() {
-            return "HistoryEntry{" + "encoded=" + encoded + ", decoded=" + decoded + ", ldt=" + ldt + '}';
-        }
-
-        static Comparator<HistoryEntry> createComparator() {
-            return new Comparator<HistoryEntry>() {
-                @Override
-                public int compare(HistoryEntry he1, HistoryEntry he2) {
-                    if (he1 == null) {
-                        he1 = new HistoryEntry("", "");
-                    }
-                    if (he2 == null) {
-                        he2 = new HistoryEntry("", "");
-                    }
-                    String[] he1DefaultToEmpty = he1.defaultToEmpty();
-                    String[] he2DefaultToEmpty = he2.defaultToEmpty();
-                    String he1CompareVal = he1DefaultToEmpty[0] + he1DefaultToEmpty[1];
-                    String he2CompareVal = he2DefaultToEmpty[0] + he2DefaultToEmpty[1];
-                    int compareResult = he1CompareVal.compareTo(he2CompareVal);
-                    return compareResult;
-                }
-            };
-        }
-    }
-
-    static class HistoryEntryRepository {
-
-        private List<HistoryEntry> historyEntryList = new ArrayList<>();
-
-        HistoryEntry add(String encoded, String decoded) {
-            HistoryEntry he = new HistoryEntry(encoded, decoded);
-            if (!historyEntryListContains(he)) {
-                historyEntryList.add(0, he);
-            }
-            return he;
-        }
-
-        private boolean historyEntryListContains(HistoryEntry he) {
-            final Comparator<HistoryEntry> comparatorHistoryEntry = HistoryEntry.createComparator();
-            boolean isDup = false;
-            for (int i = 0; !isDup && i < this.historyEntryList.size(); i++) {
-                final HistoryEntry heFromList = this.historyEntryList.get(i);
-                isDup = (comparatorHistoryEntry.compare(he, heFromList) == 0);
-
-            }
-            return isDup;
         }
     }
 
