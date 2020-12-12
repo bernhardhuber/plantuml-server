@@ -77,6 +77,10 @@
     <servlet>
         <servlet-name>EncodeForm</servlet-name>
         <servlet-class>net.sourceforge.plantuml.servlet.bootstrap.PlantUmlServlet1</servlet-class>
+        <init-param>
+            <param-name>forwardPath</param-name>
+            <param-value>/bootstrap/bootstrap1.jsp</param-value>
+        </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>plantumlservlet</servlet-name>

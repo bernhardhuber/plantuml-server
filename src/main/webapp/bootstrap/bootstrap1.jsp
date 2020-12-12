@@ -49,6 +49,8 @@
             <div class="row">
                 <div class="col-sm-1">
                     <h3>Row1 Column 1</h3>
+                    <c:out value="${snippetEntryList}"/>
+                    <c:out value="${exampleEntryList}"/>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
                     <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
                 </div>
@@ -71,7 +73,7 @@
                     <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
                 </div>
                 <div class="col-sm-1">
-                    <h3>Row1 Column 3</h3>
+                    <h3>Row1 Column 3</h3>                   
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
                     <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
                 </div>
@@ -84,7 +86,7 @@
                     <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
                 </div>
                 <div class="col-sm-11">
-                    <h3>Row2 Column 2</h3>
+                    <h3>Row2 Column 2 Diagram</h3>                    
                     <c:if test="${!empty imgurl}">
 
                         <div class="btn-group">
@@ -118,7 +120,7 @@
                             <form method="GET" action="${hostpath}/genericfileformat/${encoded}">
                                 <div class="form-group">
                                     <label for="fileFormat">File Format</label>
-                                    
+
                                     <select id="fileFormat" name="fileFormat" class="form-control">
                                         <option label="PNG" value="PNG"/>
                                         <option label="SVG" value="SVG"/>
@@ -147,8 +149,27 @@
                             </form>
                         </div>
                     </c:if>
+
+                    <h3>Row2 Column 2 History</h3>
+                    <ul>
+                        <c:forEach items="${historyEntryList}" var="_historyEntry">
+                            <li>
+                                <c:out value="${_historyEntry.createdWhen}"/>
+                                <c:out value="${_historyEntry.encoded}"/>
+                                <c:out value="${_historyEntry.decoded}"/>                            
+                            </li>
+                        </c:forEach>
+                    </ul>
+                    <c:out value="${historyEntryList}"/>                    
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
                     <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+                    <p>
+                        <c:out value="${applicationScope}"/>
+                        <c:out value="${pageScope.name}"/>
+                        <c:out value="${pageContext.request}"/>
+                        <c:out value="${page}"/>
+                        <c:out value="${request.attributes}"/>
+                    </p>
                 </div>
             </div>
         </div>
