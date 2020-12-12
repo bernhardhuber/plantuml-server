@@ -27,10 +27,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.RequestDispatcher;
@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.plantuml.OptionFlags;
 import net.sourceforge.plantuml.api.PlantumlUtils;
+import net.sourceforge.plantuml.code.NoPlantumlCompressionException;
 import net.sourceforge.plantuml.code.Transcoder;
 import net.sourceforge.plantuml.code.TranscoderUtil;
 
@@ -59,14 +60,7 @@ import net.sourceforge.plantuml.code.TranscoderUtil;
 @SuppressWarnings("serial")
 public class PlantUmlServlet1 extends HttpServlet {
 
-    private static final Logger LOG = Logger.getLogger(PlantUmlServlet1.class.getName());
-
     private static final String DEFAULT_ENCODED_TEXT = "SyfFKj2rKt3CoKnELR1Io4ZDoSa70000";
-
-    // Last part of the URL
-    private static final Pattern URL_PATTERN = Pattern.compile("^.*[^a-zA-Z0-9\\-\\_]([a-zA-Z0-9\\-\\_]+)");
-
-    private static final Pattern RECOVER_UML_PATTERN = Pattern.compile("/uml/(.*)");
 
     static {
         OptionFlags.ALLOW_INCLUDE = false;
@@ -76,6 +70,18 @@ public class PlantUmlServlet1 extends HttpServlet {
     }
 
     private final EncodeDecoder encodeDecoder = new EncodeDecoder();
+    private String forwardPath = "";
+    private HistoryEntryRepository historyEntryRepository = new HistoryEntryRepository();
+
+    @Override
+    public void init() throws ServletException {
+        this.forwardPath = this.getInitParameter("forwardPath");
+        if (this.forwardPath == null) {
+            this.forwardPath = "/bootstrap1/newjsp.jsp";
+        }
+
+        this.getServletContext().setAttribute("historyEntryRepository", historyEntryRepository);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -86,8 +92,10 @@ public class PlantUmlServlet1 extends HttpServlet {
 
         try {
             encoded = encodeDecoder.encode(text);
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "doPost", e);
+            HistoryEntry he = historyEntryRepository.add(encoded, text);
+            request.setAttribute("historyEntryList", this.historyEntryRepository.historyEntryList);
+        } catch (IOException e) {
+            this.log("doPost", e);
         }
         request.setAttribute("decoded", text);
         request.setAttribute("encoded", encoded);
@@ -97,41 +105,100 @@ public class PlantUmlServlet1 extends HttpServlet {
             request.setAttribute("mapneeded", Boolean.TRUE);
         }
 
-        final String forwardingPath = "/bootstrap1/newjsp.jsp";
-        final RequestDispatcher dispatcher = request.getRequestDispatcher(forwardingPath);
+        final String theForwardPath = this.forwardPath;
+        final RequestDispatcher dispatcher = request.getRequestDispatcher(theForwardPath);
         dispatcher.forward(request, response);
     }
 
     static class EncodeDecoder {
 
-        String encode(String text) throws IOException {
-            String encoded = getTranscoder().encode(text);
+        String encode(String decodedText) throws IOException {
+            String encoded = getTranscoder().encode(decodedText);
             return encoded;
         }
 
-        String getTextFromUrl(HttpServletRequest request, String text) throws IOException {
-            String url = request.getParameter("url");
-            final Matcher recoverUml = RECOVER_UML_PATTERN.matcher(request.getRequestURI().substring(
-                    request.getContextPath().length()));
-            // the URL form has been submitted
-            if (recoverUml.matches()) {
-                final String data = recoverUml.group(1);
-                text = getTranscoder().decode(data);
-            } else if (url != null && !url.trim().isEmpty()) {
-                // Catch the last part of the URL if necessary
-                final Matcher m1 = URL_PATTERN.matcher(url);
-                if (m1.find()) {
-                    url = m1.group(1);
-                }
-                text = getTranscoder().decode(url);
-            }
-            return text;
+        String decode(String encodedText) throws NoPlantumlCompressionException {
+            String decoded = getTranscoder().decode(encodedText);
+            return decoded;
         }
 
         Transcoder getTranscoder() {
             return TranscoderUtil.getDefaultTranscoder();
         }
+    }
 
+    static class HistoryEntry {
+
+        private final String encoded;
+        private final String decoded;
+        private final java.time.LocalDateTime ldt;
+
+        public HistoryEntry(String aEncoded, String aDecoded) {
+            this(aEncoded, aDecoded, LocalDateTime.now());
+        }
+
+        public HistoryEntry(String aEncoded, String aDecoded, LocalDateTime aLdt) {
+            this.encoded = aEncoded;
+            this.decoded = aDecoded;
+            this.ldt = aLdt;
+        }
+
+        String[] defaultToEmpty() {
+            String[] result = new String[]{
+                this.encoded != null ? this.encoded : "",
+                this.decoded != null ? this.decoded : ""
+            };
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "HistoryEntry{" + "encoded=" + encoded + ", decoded=" + decoded + ", ldt=" + ldt + '}';
+        }
+
+        static Comparator<HistoryEntry> createComparator() {
+            return new Comparator<HistoryEntry>() {
+                @Override
+                public int compare(HistoryEntry he1, HistoryEntry he2) {
+                    if (he1 == null) {
+                        he1 = new HistoryEntry("", "");
+                    }
+                    if (he2 == null) {
+                        he2 = new HistoryEntry("", "");
+                    }
+                    String[] he1DefaultToEmpty = he1.defaultToEmpty();
+                    String[] he2DefaultToEmpty = he2.defaultToEmpty();
+                    String he1CompareVal = he1DefaultToEmpty[0] + he1DefaultToEmpty[1];
+                    String he2CompareVal = he2DefaultToEmpty[0] + he2DefaultToEmpty[1];
+                    int compareResult = he1CompareVal.compareTo(he2CompareVal);
+                    return compareResult;
+                }
+            };
+        }
+    }
+
+    static class HistoryEntryRepository {
+
+        private List<HistoryEntry> historyEntryList = new ArrayList<>();
+
+        HistoryEntry add(String encoded, String decoded) {
+            HistoryEntry he = new HistoryEntry(encoded, decoded);
+            if (!historyEntryListContains(he)) {
+                historyEntryList.add(0, he);
+            }
+            return he;
+        }
+
+        private boolean historyEntryListContains(HistoryEntry he) {
+            final Comparator<HistoryEntry> comparatorHistoryEntry = HistoryEntry.createComparator();
+            boolean isDup = false;
+            for (int i = 0; !isDup && i < this.historyEntryList.size(); i++) {
+                final HistoryEntry heFromList = this.historyEntryList.get(i);
+                isDup = (comparatorHistoryEntry.compare(he, heFromList) == 0);
+
+            }
+            return isDup;
+        }
     }
 
     static class ImageFetcher {
