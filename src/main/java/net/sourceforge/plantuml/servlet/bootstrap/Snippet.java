@@ -30,13 +30,15 @@ public class Snippet {
 
         private final LocalDateTime createdWhen;
         private final String decoded;
+        private final String description;
 
         public SnippetEntry(String aDecoded) {
-            this(aDecoded, LocalDateTime.now());
+            this(aDecoded, "", LocalDateTime.now());
         }
 
-        public SnippetEntry(String aDecoded, LocalDateTime aCreatedWhen) {
+        public SnippetEntry(String aDecoded, String aDescription, LocalDateTime aCreatedWhen) {
             this.decoded = aDecoded;
+            this.description = aDescription;
             this.createdWhen = aCreatedWhen;
         }
 
@@ -57,7 +59,10 @@ public class Snippet {
 
         @Override
         public String toString() {
-            return "SnippetEntry{" + "decoded=" + decoded + ", createdWhen=" + createdWhen + '}';
+            return "SnippetEntry{"
+                    + "decoded=" + decoded
+                    + "description=" + description
+                    + ", createdWhen=" + createdWhen + '}';
         }
 
         /**
@@ -95,8 +100,7 @@ public class Snippet {
 
         private final List<SnippetEntry> snippetEntryList = new ArrayList<>();
 
-        public SnippetEntry add(String decoded) {
-            final SnippetEntry snippetEntry = new SnippetEntry(decoded);
+        public SnippetEntry add(SnippetEntry snippetEntry) {
             if (!snippetEntryListContains(snippetEntry)) {
                 snippetEntryList.add(0, snippetEntry);
             }
@@ -122,26 +126,36 @@ public class Snippet {
     public static class SnippetEntryRepositoryFactory {
 
         public void setupFromSnippetEntryPeristantStore(SnippetEntryRepository eer) {
-            SnippetEntryPeristantStore snippetEntryPeristantStore
+            final LocalDateTime now = LocalDateTime.now();
+            final SnippetEntryPeristantStore snippetEntryPeristantStore
                     = new SnippetEntryPeristantStore();
-            for (String snippet : snippetEntryPeristantStore.allSnippets()) {
-                eer.add(snippet);
+            for (String[] snippet : snippetEntryPeristantStore.allSnippets()) {
+                final String aDecoded = snippet[0];
+                final String aDescription = snippet[1];
+                final SnippetEntry se = new SnippetEntry(aDecoded, aDescription, now);
+
+                eer.add(se);
             }
         }
     }
 
     public static class SnippetEntryPeristantStore {
 
-        private final List<String> snippets;
+        private final List<String[]> snippets;
 
         public SnippetEntryPeristantStore() {
             snippets = Arrays.asList(
-                    "skinparam monochrome true",
-                     "skinparam handwritten true");
+                    new String[]{
+                        "skinparam monochrome true",
+                        "activate monochrome"},
+                    new String[]{
+                        "skinparam handwritten true",
+                        "activate handwritten style"}
+            );
         }
 
-        public List<String> allSnippets() {
-            final List<String> result = Collections.unmodifiableList(snippets);
+        public List<String[]> allSnippets() {
+            final List<String[]> result = Collections.unmodifiableList(snippets);
             return result;
         }
 

@@ -30,13 +30,15 @@ public class Example {
 
         private final LocalDateTime createdWhen;
         private final String decoded;
+        private final String description;
 
         public ExampleEntry(String aDecoded) {
-            this(aDecoded, LocalDateTime.now());
+            this(aDecoded, "", LocalDateTime.now());
         }
 
-        public ExampleEntry(String aDecoded, LocalDateTime aCreatedWhen) {
+        public ExampleEntry(String aDecoded, String aDescription, LocalDateTime aCreatedWhen) {
             this.decoded = aDecoded;
+            this.description = aDescription;
             this.createdWhen = aCreatedWhen;
         }
 
@@ -51,6 +53,10 @@ public class Example {
             return decoded;
         }
 
+        public String getDescription() {
+            return description;
+        }
+
         public LocalDateTime getCreatedWhen() {
             return createdWhen;
         }
@@ -59,6 +65,7 @@ public class Example {
         public String toString() {
             return "ExampleEntry{"
                     + "decoded=" + decoded
+                    + "description=" + description
                     + ", createdWhen=" + createdWhen + '}';
         }
 
@@ -102,12 +109,11 @@ public class Example {
 
         }
 
-        public ExampleEntry add(String decoded) {
-            final ExampleEntry exampleEntry = new ExampleEntry(decoded);
-            if (!exampleEntryListContains(exampleEntry)) {
-                exampleEntryList.add(0, exampleEntry);
+        public ExampleEntry add(ExampleEntry newExampleEntry) {
+            if (!exampleEntryListContains(newExampleEntry)) {
+                exampleEntryList.add(0, newExampleEntry);
             }
-            return exampleEntry;
+            return newExampleEntry;
         }
 
         public List<ExampleEntry> fetchAllExampleEntry() {
@@ -130,26 +136,37 @@ public class Example {
     public static class ExampleEntryRepositoryFactory {
 
         public void setupFromExampleEntryPeristantStore(ExampleEntryRepository eer) {
-            ExampleEntryPeristantStore exampleEntryPeristantStore
+            final LocalDateTime now = LocalDateTime.now();
+            final ExampleEntryPeristantStore exampleEntryPeristantStore
                     = new ExampleEntryPeristantStore();
-            for (String example : exampleEntryPeristantStore.allSnippets()) {
-                eer.add(example);
+            for (String[] example : exampleEntryPeristantStore.allSnippets()) {
+                final String aDecoded = example[0];
+                final String aDescription = example[1];
+                final ExampleEntry newExampleEntry = new ExampleEntry(aDecoded, aDescription, now);
+                eer.add(newExampleEntry);
             }
         }
     }
 
     public static class ExampleEntryPeristantStore {
 
-        private final List<String> examples;
+        private final List<String[]> examples;
 
         public ExampleEntryPeristantStore() {
-            examples = Arrays.asList(
-                    "@startuml\nBob -> Alice\n@enduml\n",
-                     "@startuml\nclass Foo\nclass Bar\nFoo -> Bar\n@enduml\n");
+            this.examples = Arrays.asList(
+                    new String[]{
+                        "@startuml\nBob -> Alice\n@enduml\n",
+                        "simple sequence diagram"
+                    },
+                    new String[]{
+                        "@startuml\nclass Foo\nclass Bar\nFoo -> Bar\n@enduml\n",
+                        "simple class digram"
+                    }
+            );
         }
 
-        public List<String> allSnippets() {
-            final List<String> result = Collections.unmodifiableList(examples);
+        public List<String[]> allSnippets() {
+            final List<String[]> result = Collections.unmodifiableList(examples);
             return result;
         }
 
