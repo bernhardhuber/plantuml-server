@@ -37,6 +37,19 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" href="${contextroot}/webjars/codemirror/3.21/lib/codemirror.css" />
+        <script src="${contextroot}/webjars/codemirror/3.21/lib/codemirror.js"></script>
+        <script>
+            window.onload = function () {
+                var myCodeMirror = CodeMirror.fromTextArea(
+                        document.getElementById("umltext"),
+                        {
+                            lineNumbers: true
+                        }
+                );
+            };
+        </script>
     </head>
     <body>
 
@@ -45,70 +58,46 @@
             <p>PlantUml diagram service</p>
         </div>
 
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-1">
-                    <h3>Row1 Column 1</h3>
-                    <c:out value="${snippetEntryList}"/>
-                    <c:out value="${exampleEntryList}"/>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+                <div class="col-md-2">
+                    <%-- snippet --%>
+                    <h3>Snippets</h3>
+                    <ol >
+                        <c:forEach items="${snippetEntryList}" var="_snippetEntry">
+                            <li title="${_snippetEntry.createdWhen}"><samp><c:out value="${_snippetEntry.decoded}"/></samp></li>
+                                </c:forEach>
+                    </ol>
+
+                    <%-- example --%>
+                    <h3>Examples</h3>
+                    <ol >
+                        <c:forEach items="${exampleEntryList}" var="_exampleEntry">
+                            <li title="${_exampleEntry.createdWhen}">
+                                <pre><c:out value="${_exampleEntry.decoded}"/></pre>
+                            </li>
+                        </c:forEach>
+                    </ol>
+                    <p>Row1 Col1 Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
                 </div>
-                <div class="col-sm-10">
-                    <h3>Row1 Column 2</h3>
+                <div class="col-md-9">
+                    <h3>UML-Text</h3>
                     <div>
                         <%-- CONTENT --%>
                         <form method="post" accept-charset="UTF-8"  action="${contextroot}/encodeform">
                             <div class="form-group">
-                                <label for="text">UML</label>
-                                <textarea id="text" name="text" class="form-control" 
+                                <label id="umltextLabel" for="umltext">UML</label>
+                                <textarea id="umltext" name="text" class="form-control"
                                           autofocus="true"
                                           cols="80"
                                           rows="20"><c:out value="${decoded}"/></textarea>
                             </div>
-                            <button type="submit" class="btn btn-default">Submit</button>
+                            <button id="umltextSubmit" type="submit" class="btn btn-primary">Submit</button>
                         </form>
                     </div>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-                </div>
-                <div class="col-sm-1">
-                    <h3>Row1 Column 3</h3>                   
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-sm-1">
-                    <h3>Row2 Column 1</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-                </div>
-                <div class="col-sm-11">
-                    <h3>Row2 Column 2 Diagram</h3>                    
+                    <h3>Diagram</h3>
                     <c:if test="${!empty imgurl}">
-
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                File Format<span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="${svgurl}" >View as SVG</a>
-                                <li><a href="${txturl}" >View as ASCII Art</a></li>
-                                <li><a href="${epsurl}" >View as EPS</a></li>
-                                <li><a href="${epstextturl}" >View as EPS Text</a></li>
-                                <li><a href="${hostpath}/map/${encoded}" >View as HTML Map</a></li>
-
-                                <c:if test="${!empty mapurl}">
-                                    <li><a href="${mapurl}" >View Map Data</a></li>
-                                    </c:if>
-                            </ul>
-                        </div>
-                        <c:if test="${cfg['SHOW_SOCIAL_BUTTONS'] == 'on' }">
-                            <%--@ include file="resource/socialbuttons2.jspf" --%>
-                        </c:if>
-
                         <div id="diagram" class="thumbnail">
                             <img src="${imgurl}" alt="PlantUML diagram" >
                             <div class="caption">
@@ -116,7 +105,36 @@
                             </div>
                         </div>
 
+                        <h3>Alternate Formats</h3>
                         <div>
+                            <p>
+                                Choose from some alternate format:
+                            </p>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    File Format<span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="${svgurl}" >View as SVG</a>
+                                    <li><a href="${txturl}" >View as ASCII Art</a></li>
+                                    <li><a href="${epsurl}" >View as EPS</a></li>
+                                    <li><a href="${epstextturl}" >View as EPS Text</a></li>
+                                    <li><a href="${hostpath}/map/${encoded}" >View as HTML Map</a></li>
+
+                                    <c:if test="${!empty mapurl}">
+                                        <li><a href="${mapurl}" >View Map Data</a></li>
+                                        </c:if>
+                                </ul>
+                            </div>
+                            <c:if test="${cfg['SHOW_SOCIAL_BUTTONS'] == 'on' }">
+                                <%--@ include file="resource/socialbuttons2.jspf" --%>
+                            </c:if>
+                        </div>
+
+                        <div>
+                            <p>
+                                Choose more alternate formats:
+                            </p>
                             <form method="GET" action="${hostpath}/genericfileformat/${encoded}">
                                 <div class="form-group">
                                     <label for="fileFormat">File Format</label>
@@ -150,26 +168,45 @@
                         </div>
                     </c:if>
 
-                    <h3>Row2 Column 2 History</h3>
-                    <ul>
-                        <c:forEach items="${historyEntryList}" var="_historyEntry">
-                            <li>
-                                <c:out value="${_historyEntry.createdWhen}"/>
-                                <c:out value="${_historyEntry.encoded}"/>
-                                <c:out value="${_historyEntry.decoded}"/>                            
+                    <h3>History</h3>
+
+                    <button class="btn btn-default" type="button"
+                            data-toggle="collapse"
+                            data-target="#collapseHistory"
+                            aria-expanded="false"
+                            aria-controls="collapseExample">
+                        Toogle History
+                    </button>
+
+                    <div class="collapse" id="collapseHistory">
+                        <div class="well">
+                            <ol>
+                                <c:forEach items="${historyEntryList}" var="_historyEntry">
+                                    <li>
+                                        <ul class="list-unstyled">
+                                            <li><c:out value="${_historyEntry.createdWhen}"/></li>
+                                            <li><samp><c:out value="${_historyEntry.encoded}"/></samp></li>
+                                            <li><pre><c:out value="${_historyEntry.decoded}"/></pre></li>
+                                </ul>
                             </li>
-                        </c:forEach>
-                    </ul>
-                    <c:out value="${historyEntryList}"/>                    
+                                </c:forEach>
+                        </ol>
+                        </div>
+                    </div>
+                    <p>Row1 Column 2 Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                </div>
+                <div class="col-md-1">
+                    <h3>Row1 Column 3</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
                     <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-                    <p>
-                        <c:out value="${applicationScope}"/>
-                        <c:out value="${pageScope.name}"/>
-                        <c:out value="${pageContext.request}"/>
-                        <c:out value="${page}"/>
-                        <c:out value="${request.attributes}"/>
-                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Row2 Column 1-3</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
                 </div>
             </div>
         </div>
