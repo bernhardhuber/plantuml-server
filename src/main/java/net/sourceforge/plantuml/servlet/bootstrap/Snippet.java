@@ -21,8 +21,8 @@ import java.util.List;
 public class Snippet {
 
     /**
-     * Encapulate a puml snippet-entry, having decoded puml, and date of
-     * createing this entry
+     * Encapsulate a puml snippet-entry, having decoded puml, and date of
+     * creating this entry
      */
     public static class SnippetEntry implements Serializable {
 
@@ -150,7 +150,10 @@ public class Snippet {
                         "activate monochrome"},
                     new String[]{
                         "skinparam handwritten true",
-                        "activate handwritten style"}
+                        "activate handwritten style"},
+                    new String[]{
+                        "!pragma graphviz_dot jdot",
+                        "Generate image without launching Graphviz/DOT!"}
             );
         }
 

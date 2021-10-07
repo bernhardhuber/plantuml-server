@@ -52,7 +52,6 @@
         </script>
     </head>
     <body>
-
         <div class="jumbotron text-center">
             <h1>PlantUml</h1>
             <p>PlantUml diagram service</p>

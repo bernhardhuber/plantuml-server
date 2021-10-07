@@ -1,9 +1,8 @@
 package net.sourceforge.plantuml.servlet;
 
 import java.net.InetSocketAddress;
-
-import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 public class ServerUtils {
@@ -12,7 +11,8 @@ public class ServerUtils {
 
     public ServerUtils(boolean start) throws Exception {
         server = new Server(new InetSocketAddress("127.0.0.1", 0));
-        server.addBean(new WebAppContext(server, "src/main/webapp", "/plantuml"));
+        final WebAppContext webAppContext = new WebAppContext(server, "src/main/webapp", "/plantuml");
+        server.addBean(webAppContext);
         if (start) {
             startServer();
         }
@@ -31,8 +31,10 @@ public class ServerUtils {
     }
 
     public String getServerUrl() {
-        Connector connector = server.getConnectors()[0];
-        return String.format("http://%s:%d/plantuml/", connector.getHost(), connector.getLocalPort());
+        final ServerConnector serverConnector = (ServerConnector) server.getConnectors()[0];
+        final String host = serverConnector.getHost();
+        final int port = serverConnector.getLocalPort();
+        return String.format("http://%s:%d/plantuml/", host, port);
     }
 
 }

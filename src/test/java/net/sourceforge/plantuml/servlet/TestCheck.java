@@ -18,7 +18,7 @@ public class TestCheck extends WebappTestCase {
         // Analyze response
         // Verifies the Content-Type header
         assertEquals("Response content type is not TEXT PLAIN", "text/plain", response.getContentType());
-        assertEquals("Response character set is not UTF-8", "UTF-8", response.getCharacterSet());
+        assertTrue("Response character set is not UTF-8: " + response.getCharacterSet(), "UTF-8".equalsIgnoreCase(response.getCharacterSet()));
         // Get the content, check its first characters and verify its size
         String checkResult = response.getText();
         assertTrue("Response content is not starting with (2 participants)",

@@ -13,6 +13,10 @@
     <c:set var="imgurl" value="${hostpath}/png/${encoded}" />
     <c:set var="svgurl" value="${hostpath}/svg/${encoded}" />
     <c:set var="txturl" value="${hostpath}/txt/${encoded}" />
+    
+    <c:set var="epsurl" value="${hostpath}/eps/${encoded}" />
+    <c:set var="epstextturl" value="${hostpath}/epstext/${encoded}" />    
+
     <c:if test="${!empty mapneeded}">
         <c:set var="mapurl" value="${hostpath}/map/${encoded}" />
     </c:if>
@@ -74,6 +78,10 @@
         <hr/>
         <a href="${svgurl}">View as SVG</a>&nbsp;
         <a href="${txturl}">View as ASCII Art</a>&nbsp;
+<a href="${epsurl}">View as EPS</a>&nbsp;
+<a href="${epstextturl}">View as EPS Text</a>&nbsp;
+<a href="${hostpath}/map/${encoded}">View as HTML Map</a>&nbsp;
+            
         <c:if test="${!empty mapurl}">
             <a href="${mapurl}">View Map Data</a>
         </c:if>
@@ -90,6 +98,37 @@
             </c:otherwise>
             </c:choose>
         </p>
+            
+            <div>
+<form method="GET" action="${hostpath}/genericfileformat/${encoded}">
+    Encoded diagram : ${encoded}<br/>
+    <select name="fileFormat">
+        <option label="PNG" value="PNG"/>
+        <option label="SVG" value="SVG"/>
+        <option label="EPS" value="EPS"/>
+        <option label="EPS_TEXT" value="EPS_TEXT"/>
+        <option label="ATXT" value="ATXT"/>
+        <option label="UTXT" value="UTXT"/>
+        <option label="XMI_STANDARD" value="XMI_STANDARD"/>
+        <option label="XMI_STAR" value="XMI_STAR"/>
+        <option label="XMI_ARGO" value="XMI_ARGO"/>
+        <option label="SCXML" value="SCXML"/>
+        <option label="PDF" value="PDF"/>
+        <option label="MJPEG" value="MJPEG"/>
+        <option label="ANIMATED_GIF" value="ANIMATED_GIF"/>
+        <option label="HTML" value="HTML"/>
+        <option label="HTML5" value="HTML5"/>
+        <option label="VDX" value="VDX"/>
+        <option label="LATEX" value="LATEX"/>
+        <option label="LATEX_NO_PREAMBLE" value="LATEX_NO_PREAMBLE"/>
+        <option label="BASE64" value="BASE64"/>
+        <option label="BRAILLE_PNG" value="BRAILLE_PNG"/>
+        <option label="PREPROC" value="PREPROC"/>
+    </select>
+    <br/>
+    <input type="submit"/>    
+</form>                
+            </div>            
     </c:if>
 </div>
 <%-- FOOTER --%>

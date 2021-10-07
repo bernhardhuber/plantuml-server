@@ -19,8 +19,8 @@ import java.util.List;
 public class History {
 
     /**
-     * Encapulate a puml history-entry, having decoded, and encoded puml, and
-     * date of createing this entry
+     * Encapsulate a puml history-entry, having decoded, and encoded puml, and
+     * date of creating this entry
      */
     public static class HistoryEntry implements Serializable {
 

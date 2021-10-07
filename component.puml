@@ -1,0 +1,12 @@
+@startuml
+skinparam monochrome true
+skinparam handwritten true
+
+
+model -- [Software Component]
+api -- [Software Component]
+
+model <. api : depends on
+
+@enduml
+

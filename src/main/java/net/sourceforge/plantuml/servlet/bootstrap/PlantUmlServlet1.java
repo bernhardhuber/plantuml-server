@@ -35,9 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.plantuml.OptionFlags;
 import net.sourceforge.plantuml.api.PlantumlUtils;
-import net.sourceforge.plantuml.code.NoPlantumlCompressionException;
-import net.sourceforge.plantuml.code.Transcoder;
-import net.sourceforge.plantuml.code.TranscoderUtil;
+import net.sourceforge.plantuml.servlet.bootstrap.EncodeDecoder.EncodeDecoderException;
 import net.sourceforge.plantuml.servlet.bootstrap.Example.ExampleEntryRepository;
 import net.sourceforge.plantuml.servlet.bootstrap.Example.ExampleEntryRepositoryFactory;
 import net.sourceforge.plantuml.servlet.bootstrap.History.HistoryEntry;
@@ -99,15 +97,15 @@ public class PlantUmlServlet1 extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
         request.setCharacterEncoding("UTF-8");
-        String text = request.getParameter("text");
-        String encoded = DEFAULT_ENCODED_TEXT;
 
+        final String text = request.getParameter("text");
+        String encoded = DEFAULT_ENCODED_TEXT;
         // history
         try {
             encoded = encodeDecoder.encode(text);
             HistoryEntry he = historyEntryRepository.add(encoded, text);
             request.setAttribute("historyEntryList", this.historyEntryRepository.fetchAllHistoryEntry());
-        } catch (IOException e) {
+        } catch (EncodeDecoderException e) {
             this.log("doPost", e);
         }
         // example
@@ -127,23 +125,6 @@ public class PlantUmlServlet1 extends HttpServlet {
         final String theForwardPath = this.forwardPath;
         final RequestDispatcher dispatcher = request.getRequestDispatcher(theForwardPath);
         dispatcher.forward(request, response);
-    }
-
-    static class EncodeDecoder {
-
-        String encode(String decodedText) throws IOException {
-            String encoded = getTranscoder().encode(decodedText);
-            return encoded;
-        }
-
-        String decode(String encodedText) throws NoPlantumlCompressionException {
-            String decoded = getTranscoder().decode(encodedText);
-            return decoded;
-        }
-
-        Transcoder getTranscoder() {
-            return TranscoderUtil.getDefaultTranscoder();
-        }
     }
 
     static class ImageFetcher {

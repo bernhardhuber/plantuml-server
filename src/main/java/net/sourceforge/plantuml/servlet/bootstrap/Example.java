@@ -21,8 +21,8 @@ import java.util.List;
 public class Example {
 
     /**
-     * Encapulate a puml example-entry, having decoded puml, and date of
-     * createing this entry
+     * Encapsulate a puml example-entry, having decoded puml, and date of
+     * creating this entry
      */
     public static class ExampleEntry implements Serializable {
 
@@ -155,7 +155,7 @@ public class Example {
         public ExampleEntryPeristantStore() {
             this.examples = Arrays.asList(
                     new String[]{
-                        "@startuml\nBob -> Alice\n@enduml\n",
+                        "@startuml\nBob -> Alice: hello\n@enduml\n",
                         "simple sequence diagram"
                     },
                     new String[]{
