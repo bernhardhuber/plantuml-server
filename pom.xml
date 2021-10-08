@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.sourceforge.plantuml</groupId>
     <artifactId>plantumlservlet</artifactId>
-    <version>1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>PlantUML Servlet</name>
     <packaging>war</packaging>
 
@@ -168,6 +168,16 @@
             <version>3.21</version>
         </dependency>
         <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+        <dependency>
             <groupId>HTTPClient</groupId>
             <artifactId>HTTPClient</artifactId>
             <version>0.3-3</version>
@@ -184,7 +194,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>

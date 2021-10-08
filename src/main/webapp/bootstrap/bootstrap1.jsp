@@ -3,7 +3,6 @@
     Created on : Dec 10, 2020, 8:43:38 PM
     Author     : berni3
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8" session="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -34,9 +33,14 @@
         <title>Bootstrap Example</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <%--
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        --%>
+        <link rel="stylesheet" href="${contextroot}/webjars/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="${contextroot}/webjars/jquery/3.5.1/jquery.min.js"></script>
+        <script src="${contextroot}/webjars/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
         <link rel="stylesheet" href="${contextroot}/webjars/codemirror/3.21/lib/codemirror.css" />
         <script src="${contextroot}/webjars/codemirror/3.21/lib/codemirror.js"></script>
@@ -55,6 +59,11 @@
         <div class="jumbotron text-center">
             <h1>PlantUml</h1>
             <p>PlantUml diagram service</p>
+            <p>
+                <a href="${contextroot}/">Plant UML Home</a>
+                | <a href="${contextroot}/bootstrap/bootstrap1.jsp">Bootstrap</a>
+                | <a href="${contextroot}/simplejs/simplejs.jsp">SimpleJs</a>
+            </p>
         </div>
 
         <div class="container-fluid">
@@ -64,8 +73,10 @@
                     <h3>Snippets</h3>
                     <ol >
                         <c:forEach items="${snippetEntryList}" var="_snippetEntry">
-                            <li title="${_snippetEntry.createdWhen}"><samp><c:out value="${_snippetEntry.decoded}"/></samp></li>
-                                </c:forEach>
+                            <li title="${_snippetEntry.createdWhen}">
+                                <samp title="${_snippetEntry.description}"><c:out value="${_snippetEntry.text}"/></samp>
+                            </li>
+                        </c:forEach>
                     </ol>
 
                     <%-- example --%>

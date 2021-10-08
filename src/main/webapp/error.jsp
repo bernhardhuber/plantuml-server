@@ -10,7 +10,7 @@ String contextRoot = request.getContextPath();
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="pragma" content="no-cache" />
     <meta http-equiv="cache-control" content="no-cache, must-revalidate" />
-    <link rel="stylesheet" href="<%=contextRoot %>/plantuml.css" type="text/css"/>
+    <link rel="stylesheet" href="<%=contextRoot %>/resource/plantuml.css" type="text/css"/>
     <link rel="icon" href="<%=contextRoot %>/favicon.ico" type="image/x-icon"/> 
     <link rel="shortcut icon" href="<%=contextRoot %>/favicon.ico" type="image/x-icon"/>
     <title>PlantUMLServer Error</title>

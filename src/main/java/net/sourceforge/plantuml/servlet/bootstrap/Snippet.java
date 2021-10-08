@@ -21,15 +21,15 @@ import java.util.List;
 public class Snippet {
 
     /**
-     * Encapsulate a puml snippet-entry, having decoded puml, and date of
-     * creating this entry
+     * Encapsulate a puml snippet-entry, having text puml, and date of
+ creating this entry
      */
     public static class SnippetEntry implements Serializable {
 
         private static final long serialVersionUID = 20201212L;
 
         private final LocalDateTime createdWhen;
-        private final String decoded;
+        private final String text;
         private final String description;
 
         public SnippetEntry(String aDecoded) {
@@ -37,21 +37,26 @@ public class Snippet {
         }
 
         public SnippetEntry(String aDecoded, String aDescription, LocalDateTime aCreatedWhen) {
-            this.decoded = aDecoded;
+            this.text = aDecoded;
             this.description = aDescription;
             this.createdWhen = aCreatedWhen;
         }
 
         String[] defaultToEmpty() {
             String[] result = new String[]{
-                this.decoded != null ? this.decoded : ""
+                this.text != null ? this.text : ""
             };
             return result;
         }
 
-        public String getDecoded() {
-            return decoded;
+        public String getText() {
+            return text;
         }
+
+        public String getDescription() {
+            return description;
+        }
+
 
         public LocalDateTime getCreatedWhen() {
             return createdWhen;
@@ -60,7 +65,7 @@ public class Snippet {
         @Override
         public String toString() {
             return "SnippetEntry{"
-                    + "decoded=" + decoded
+                    + "decoded=" + text
                     + "description=" + description
                     + ", createdWhen=" + createdWhen + '}';
         }
@@ -75,7 +80,7 @@ public class Snippet {
             return new Comparator<SnippetEntry>() {
                 @Override
                 public int compare(SnippetEntry he1, SnippetEntry he2) {
-                    // compare only encoded, decoded, ignore createdWhen
+                    // compare only encoded, text, ignore createdWhen
                     if (he1 == null) {
                         he1 = new SnippetEntry("");
                     }
@@ -102,7 +107,7 @@ public class Snippet {
 
         public SnippetEntry add(SnippetEntry snippetEntry) {
             if (!snippetEntryListContains(snippetEntry)) {
-                snippetEntryList.add(0, snippetEntry);
+                snippetEntryList.add(snippetEntry);
             }
             return snippetEntry;
         }
@@ -152,8 +157,12 @@ public class Snippet {
                         "skinparam handwritten true",
                         "activate handwritten style"},
                     new String[]{
-                        "!pragma graphviz_dot jdot",
+                        "!pragma graphviz_dot jdot [deprecated]",
+                        "Generate image without launching Graphviz/DOT!"},
+                    new String[]{
+                        "!pragma layout smetana",
                         "Generate image without launching Graphviz/DOT!"}
+
             );
         }
 

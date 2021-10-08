@@ -14,9 +14,14 @@
         <title>SimpleJs Example</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <%--
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        --%>
+        <link rel="stylesheet" href="${contextroot}/webjars/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="${contextroot}/webjars/jquery/3.5.1/jquery.min.js"></script>
+        <script src="${contextroot}/webjars/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
         <link rel="stylesheet" href="${contextroot}/webjars/codemirror/3.21/lib/codemirror.css" />
         <script src="${contextroot}/webjars/codemirror/3.21/lib/codemirror.js"></script>
@@ -68,6 +73,11 @@
         <div class="jumbotron text-center">
             <h1>PlantUml</h1>
             <p>PlantUml diagram service</p>
+            <p>
+                <a href="${contextroot}/">Plant UML Home</a>
+                | <a href="${contextroot}/bootstrap/bootstrap1.jsp">Bootstrap</a>
+                | <a href="${contextroot}/simplejs/simplejs.jsp">SimpleJs</a>
+            </p>
         </div>
 
         <div class="container-fluid">

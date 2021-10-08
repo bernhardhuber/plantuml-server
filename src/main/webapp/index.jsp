@@ -13,9 +13,9 @@
     <c:set var="imgurl" value="${hostpath}/png/${encoded}" />
     <c:set var="svgurl" value="${hostpath}/svg/${encoded}" />
     <c:set var="txturl" value="${hostpath}/txt/${encoded}" />
-    
+
     <c:set var="epsurl" value="${hostpath}/eps/${encoded}" />
-    <c:set var="epstextturl" value="${hostpath}/epstext/${encoded}" />    
+    <c:set var="epstextturl" value="${hostpath}/epstext/${encoded}" />
 
     <c:if test="${!empty mapneeded}">
         <c:set var="mapurl" value="${hostpath}/map/${encoded}" />
@@ -29,16 +29,16 @@
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="pragma" content="no-cache" />
     <meta http-equiv="cache-control" content="no-cache, must-revalidate" />
-    <link rel="icon" href="${contextroot}/favicon.ico" type="image/x-icon"/> 
+    <link rel="icon" href="${contextroot}/favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="${contextroot}/favicon.ico" type="image/x-icon"/>
-    <link rel="stylesheet" href="${contextroot}/plantuml.css" />
+    <link rel="stylesheet" href="${contextroot}/resource/plantuml.css" />
     <link rel="stylesheet" href="${contextroot}/webjars/codemirror/3.21/lib/codemirror.css" />
     <script src="${contextroot}/webjars/codemirror/3.21/lib/codemirror.js"></script>
     <!-- <script src="mode/plantuml.js"></script> -->
     <script>
         window.onload = function() {
             var myCodeMirror = CodeMirror.fromTextArea(
-                document.getElementById("text"), 
+                document.getElementById("text"),
                 {lineNumbers: true}
             );
         };
@@ -46,17 +46,8 @@
     <title>PlantUMLServer</title>
 </head>
 <body>
-<div id="header">
-    <%-- PAGE TITLE --%>
-    <h1>PlantUML Server</h1>
-    <c:if test="${cfg['SHOW_SOCIAL_BUTTONS'] eq 'on' }">
-        <%@ include file="resource/socialbuttons1.html" %>
-    </c:if>
-    <c:if test="${cfg['SHOW_GITHUB_RIBBON'] eq 'on' }">
-        <%@ include file="resource/githubribbon.html" %>
-    </c:if>
-    <p>Create your <a href="http://plantuml.com">PlantUML</a> diagrams directly in your browser !</p>
-</div>
+<%-- HEADER --%>
+<%@ include file="header.jspf" %>
 <div id="content">
     <%-- CONTENT --%>
     <form method="post" accept-charset="UTF-8"  action="${contextroot}/form">
@@ -81,7 +72,7 @@
 <a href="${epsurl}">View as EPS</a>&nbsp;
 <a href="${epstextturl}">View as EPS Text</a>&nbsp;
 <a href="${hostpath}/map/${encoded}">View as HTML Map</a>&nbsp;
-            
+
         <c:if test="${!empty mapurl}">
             <a href="${mapurl}">View Map Data</a>
         </c:if>
@@ -98,7 +89,7 @@
             </c:otherwise>
             </c:choose>
         </p>
-            
+
             <div>
 <form method="GET" action="${hostpath}/genericfileformat/${encoded}">
     Encoded diagram : ${encoded}<br/>
@@ -126,12 +117,12 @@
         <option label="PREPROC" value="PREPROC"/>
     </select>
     <br/>
-    <input type="submit"/>    
-</form>                
-            </div>            
+    <input type="submit"/>
+</form>
+            </div>
     </c:if>
 </div>
 <%-- FOOTER --%>
-<%@ include file="footer.jspf" %> 
+<%@ include file="footer.jspf" %>
 </body>
 </html>
