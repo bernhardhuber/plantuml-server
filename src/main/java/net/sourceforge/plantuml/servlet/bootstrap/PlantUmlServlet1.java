@@ -30,12 +30,14 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.plantuml.OptionFlags;
 import net.sourceforge.plantuml.api.PlantumlUtils;
-import net.sourceforge.plantuml.servlet.bootstrap.EncodeDecoder.EncodeDecoderException;
+import net.sourceforge.plantuml.servlet.bootstrap.EncoderDecoder.EncodeDecoderException;
 import net.sourceforge.plantuml.servlet.bootstrap.Example.ExampleEntryRepository;
 import net.sourceforge.plantuml.servlet.bootstrap.Example.ExampleEntryRepositoryFactory;
 import net.sourceforge.plantuml.servlet.bootstrap.History.HistoryEntry;
@@ -56,6 +58,12 @@ import net.sourceforge.plantuml.servlet.bootstrap.Snippet.SnippetEntryRepository
  *
  */
 @SuppressWarnings("serial")
+@WebServlet(name = "EncodeForm",
+        initParams = {
+            @WebInitParam(name = "forwardPath", value = "/bootstrap/bootstrap1.jsp")
+        },
+        urlPatterns = {"/encodeform"}
+)
 public class PlantUmlServlet1 extends HttpServlet {
 
     private static final String DEFAULT_ENCODED_TEXT = "SyfFKj2rKt3CoKnELR1Io4ZDoSa70000";
@@ -67,9 +75,9 @@ public class PlantUmlServlet1 extends HttpServlet {
         }
     }
 
-    private final EncodeDecoder encodeDecoder = new EncodeDecoder();
+    private final EncoderDecoder encodeDecoder = new EncoderDecoder();
     private String forwardPath = "";
-// Components
+    // Components
     private ExampleEntryRepository exampleEntryRepository;
     private HistoryEntryRepository historyEntryRepository;
     private SnippetEntryRepository snippetEntryRepository;

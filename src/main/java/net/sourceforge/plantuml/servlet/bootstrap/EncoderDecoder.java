@@ -14,7 +14,7 @@ import net.sourceforge.plantuml.code.TranscoderUtil;
  *
  * @author berni3
  */
-public class EncodeDecoder {
+public class EncoderDecoder {
 
     public static class EncodeDecoderException extends RuntimeException {
 
@@ -51,7 +51,6 @@ public class EncodeDecoder {
             return decoded;
         } catch (NoPlantumlCompressionException ex) {
             throw new EncodeDecoderException("Failed decoding: " + encodedText, ex);
-
         }
     }
 

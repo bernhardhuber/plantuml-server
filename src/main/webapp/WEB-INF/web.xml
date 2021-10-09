@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-    <display-name>plantuml</display-name>
+<web-app
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+    metadata-complete="false"
+    version="3.1">
+<display-name>plantuml</display-name>
     <context-param>
         <param-name>org.eclipse.jetty.servlet.Default.welcomeServlets</param-name>
         <param-value>exact</param-value>
@@ -69,19 +74,7 @@
         <servlet-name>languageservlet</servlet-name>
         <servlet-class>net.sourceforge.plantuml.servlet.LanguageServlet</servlet-class>
     </servlet>
-    <!-- Patterns of the servlet -->
-    <servlet>
-        <servlet-name>GenericFileFormatServlet</servlet-name>
-        <servlet-class>net.sourceforge.plantuml.servlet.GenericFileFormatServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>EncodeForm</servlet-name>
-        <servlet-class>net.sourceforge.plantuml.servlet.bootstrap.PlantUmlServlet1</servlet-class>
-        <init-param>
-            <param-name>forwardPath</param-name>
-            <param-value>/bootstrap/bootstrap1.jsp</param-value>
-        </init-param>
-    </servlet>
+ 
     <servlet-mapping>
         <servlet-name>plantumlservlet</servlet-name>
         <url-pattern>/welcome</url-pattern>
@@ -145,7 +138,10 @@
     <servlet-mapping>
         <servlet-name>languageservlet</servlet-name>
         <url-pattern>/language</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>   
+    <welcome-file-list>
+        <welcome-file>welcome</welcome-file>
+    </welcome-file-list>
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
         <location>/error.jsp</location>
@@ -154,15 +150,4 @@
         <error-code>500</error-code>
         <location>/error.jsp</location>
     </error-page>
-    <servlet-mapping>
-        <servlet-name>GenericFileFormatServlet</servlet-name>
-        <url-pattern>/genericfileformat/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>EncodeForm</servlet-name>
-        <url-pattern>/encodeform</url-pattern>
-    </servlet-mapping>
-    <welcome-file-list>
-        <welcome-file>welcome</welcome-file>
-    </welcome-file-list>
 </web-app>

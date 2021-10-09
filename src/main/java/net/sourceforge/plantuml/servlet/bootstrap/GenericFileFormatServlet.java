@@ -3,22 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.sourceforge.plantuml.servlet;
+package net.sourceforge.plantuml.servlet.bootstrap;
 
 import java.io.IOException;
 import java.util.Arrays;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.plantuml.FileFormat;
+import net.sourceforge.plantuml.servlet.UmlDiagramService;
 
 /**
  *
  * @author berni3
  */
+@WebServlet(name = "GenericFileFormatServlet",
+        urlPatterns = {"/genericfileformat/*"}
+)
 public class GenericFileFormatServlet extends UmlDiagramService {
 
-     private HttpServletRequest myRequest;
+    private HttpServletRequest myRequest;
 
     @Override
     public FileFormat getOutputFormat() {

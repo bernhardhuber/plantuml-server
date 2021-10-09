@@ -37,7 +37,8 @@ import net.sourceforge.plantuml.OptionFlags;
 import net.sourceforge.plantuml.servlet.utility.UmlExtractor;
 
 /**
- * Common service servlet to produce diagram from compressed UML source contained in the end part of the requested URI.
+ * Common service servlet to produce diagram from compressed UML source
+ * contained in the end part of the requested URI.
  */
 @SuppressWarnings("serial")
 public abstract class UmlDiagramService extends HttpServlet {
@@ -59,7 +60,7 @@ public abstract class UmlDiagramService extends HttpServlet {
         try {
             uml = UmlExtractor.getUmlSource(sourceAndIdx[0]);
         } catch (Exception e) {
-            e.printStackTrace();
+            this.log("UmlDiagramService doGet", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request");
             return;
         }
@@ -88,11 +89,11 @@ public abstract class UmlDiagramService extends HttpServlet {
     }
 
     private void doDiagramResponse(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        String uml,
-        int idx)
-        throws IOException {
+            HttpServletRequest request,
+            HttpServletResponse response,
+            String uml,
+            int idx)
+            throws IOException {
 
         // generate the response
         DiagramResponse dr = new DiagramResponse(response, getOutputFormat(), request);
@@ -115,8 +116,8 @@ public abstract class UmlDiagramService extends HttpServlet {
      */
     public final String[] getSourceAndIdx(HttpServletRequest request) {
         final Matcher recoverUml = RECOVER_UML_PATTERN.matcher(
-            request.getRequestURI().substring(
-            request.getContextPath().length()));
+                request.getRequestURI().substring(
+                        request.getContextPath().length()));
         // the URL form has been submitted
         if (recoverUml.matches()) {
             final String data = recoverUml.group(2);
@@ -127,14 +128,15 @@ public abstract class UmlDiagramService extends HttpServlet {
                 } else {
                     idx = idx.substring(0, idx.length() - 1);
                 }
-                return new String[]{data, idx };
+                return new String[]{data, idx};
             }
         }
-        return new String[]{"", "0" };
+        return new String[]{"", "0"};
     }
 
     /**
-     * Gives the wished output format of the diagram. This value is used by the DiagramResponse class.
+     * Gives the wished output format of the diagram. This value is used by the
+     * DiagramResponse class.
      *
      * @return the format
      */

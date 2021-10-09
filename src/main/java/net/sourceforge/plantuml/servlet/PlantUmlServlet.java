@@ -29,14 +29,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sourceforge.plantuml.OptionFlags;
 import net.sourceforge.plantuml.api.PlantumlUtils;
 import net.sourceforge.plantuml.code.Transcoder;
@@ -64,6 +62,7 @@ public class PlantUmlServlet extends HttpServlet {
     public static final Pattern URL_PATTERN = Pattern.compile("^.*[^a-zA-Z0-9\\-\\_]([a-zA-Z0-9\\-\\_]+)");
 
     private static final Pattern RECOVER_UML_PATTERN = Pattern.compile("/uml/(.*)");
+
     static {
         OptionFlags.ALLOW_INCLUDE = false;
         if ("true".equalsIgnoreCase(System.getenv("ALLOW_PLANTUML_INCLUDE"))) {
@@ -95,7 +94,7 @@ public class PlantUmlServlet extends HttpServlet {
         try {
             text = getTextFromUrl(request, text);
         } catch (Exception e) {
-            e.printStackTrace();
+            this.log("PlantUmlServlet doGet", e);
         }
 
         // no Text form has been submitted
@@ -130,7 +129,7 @@ public class PlantUmlServlet extends HttpServlet {
             text = getTextFromUrl(request, text);
             encoded = getTranscoder().encode(text);
         } catch (Exception e) {
-            e.printStackTrace();
+            this.log("PlantUmlServlet doPost", e);
         }
 
         redirectNow(request, response, encoded);
@@ -188,7 +187,5 @@ public class PlantUmlServlet extends HttpServlet {
         is = con.getInputStream();
         return is;
     }
-
-
 
 }

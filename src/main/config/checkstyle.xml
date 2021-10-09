@@ -41,10 +41,10 @@
     <module name="IllegalImport"/>
     <module name="RedundantImport"/>
     <module name="UnusedImports"/>
-    <module name="LineLength">
+    <!--module name="LineLength">
       <property name="max" value="120"/>
       <property name="tabWidth" value="4"/>
-    </module>
+    </module-->
     <module name="MethodLength"/>
     <module name="ParameterNumber"/>
     <module name="EmptyForIteratorPad"/>
@@ -83,7 +83,7 @@
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="MissingSwitchDefault"/>
-    <module name="RedundantThrows"/>
+    <!--module name="RedundantThrows"/-->
     <module name="SimplifyBooleanExpression">
       <property name="severity" value="ignore"/>
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
