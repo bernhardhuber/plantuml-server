@@ -18,19 +18,13 @@ import net.sourceforge.plantuml.servlet.bootstrap.Wrappers.Tuple;
  */
 class FileFormatExtractor {
 
-    Optional<FileFormat> extractFileFormat(Map<String, String[]> parameterMap) {
+    Optional<FileFormat> extractFileFormat(Map<String, String> parameterMap) {
         final List<Tuple<String, FileFormat>> l = Arrays.asList(
                 new Tuple<>("format", null),
                 new Tuple<>("fileFormat", null)
         );
         for (Tuple<String, FileFormat> t : l) {
-            final String[] parameterValues = parameterMap.getOrDefault(t.getU(), null);
-            final String parameterValue;
-            if (parameterValues != null && parameterValues.length >= 1) {
-                parameterValue = parameterValues[0];
-            } else {
-                parameterValue = null;
-            }
+            final String parameterValue = parameterMap.getOrDefault(t.getU(), null);
             if (parameterValue == null) {
                 continue;
             }

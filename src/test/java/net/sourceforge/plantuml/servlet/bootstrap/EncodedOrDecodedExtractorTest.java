@@ -29,8 +29,8 @@ public class EncodedOrDecodedExtractorTest {
      */
     @Test
     public void testExtractEncodedOrDecodedValue_encoded() {
-        final Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("encoded", new String[]{"some_encoded_value"});
+        final Map<String, String> parameterMap = new HashMap<>();
+        parameterMap.put("encoded", "some_encoded_value");
 
         final EncodedOrDecodedExtractor instance = new EncodedOrDecodedExtractor();
         final Optional<Tuple<EncodedOrDecoded, String>> result = instance.extractEncodedOrDecodedValue(parameterMap);
@@ -46,8 +46,8 @@ public class EncodedOrDecodedExtractorTest {
      */
     @Test
     public void testExtractEncodedOrDecodedValue_decoded() {
-        final Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("decoded", new String[]{"some_decoded_value"});
+        final Map<String, String> parameterMap = new HashMap<>();
+        parameterMap.put("decoded", "some_decoded_value");
 
         final EncodedOrDecodedExtractor instance = new EncodedOrDecodedExtractor();
         final Optional<Tuple<EncodedOrDecoded, String>> result = instance.extractEncodedOrDecodedValue(parameterMap);
@@ -63,8 +63,8 @@ public class EncodedOrDecodedExtractorTest {
      */
     @Test
     public void testExtractEncodedOrDecodedValue_text() {
-        final Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("text", new String[]{"some_decoded_value"});
+        final Map<String, String> parameterMap = new HashMap<>();
+        parameterMap.put("text", "some_decoded_value");
 
         final EncodedOrDecodedExtractor instance = new EncodedOrDecodedExtractor();
         final Optional<Tuple<EncodedOrDecoded, String>> result = instance.extractEncodedOrDecodedValue(parameterMap);

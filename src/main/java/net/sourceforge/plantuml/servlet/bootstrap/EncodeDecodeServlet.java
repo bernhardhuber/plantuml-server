@@ -23,25 +23,30 @@ import net.sourceforge.plantuml.servlet.bootstrap.Wrappers.Tuple;
 @WebServlet(name = "EncodeDecodeServlet",
         urlPatterns = {"/xxx-encode-decode"}
 )
-public class InProgressEncodeDecodeServlet extends HttpServlet {
+public class EncodeDecodeServlet extends HttpServlet {
 
     private final EncoderDecoder encodeDecoder = new EncoderDecoder();
+    private final HttpRequestDumper httpRequestDumper = new HttpRequestDumper();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.log(httpRequestDumper.dump(req));
         super.doPost(req, resp); //To change body of generated methods, choose Tools | Templates.
     }
 
     // TODO add mapping url-path/[get,post]/params -> encode, decode
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.log(httpRequestDumper.dump(req));
+
         final String umlDefault = String.format("\\@staruml%n"
                 + "Alice --> Bob : hello%n"
                 + "\\@enduml");
 
-        Map<String, String[]> m = req.getParameterMap();
-        EncodedOrDecodedExtractor encodedOrDecodedExtractor = new EncodedOrDecodedExtractor();
-        Optional<Tuple<EncodedOrDecoded, String>> xxxOpt = encodedOrDecodedExtractor.extractEncodedOrDecodedValue(m);
+        final EncodedOrDecodedExtractor encodedOrDecodedExtractor = new EncodedOrDecodedExtractor();
+        final ConvertRequestParameterMap convertRequestParameterMap = new ConvertRequestParameterMap();
+        final Map<String, String> mFromParameterMap = convertRequestParameterMap.xxx(req.getParameterMap());
+        final Optional<Tuple<EncodedOrDecoded, String>> xxxOpt = encodedOrDecodedExtractor.extractEncodedOrDecodedValue(mFromParameterMap);
 
         Tuple<EncodedOrDecoded, String> xxx = xxxOpt.orElseGet(() -> {
             Tuple<EncodedOrDecoded, String> _t = new Tuple<>(EncodedOrDecoded.decoded, umlDefault);

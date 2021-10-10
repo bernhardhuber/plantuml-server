@@ -22,20 +22,14 @@ class EncodedOrDecodedExtractor {
         encoded, decoded;
     }
 
-    Optional<Tuple<EncodedOrDecoded, String>> extractEncodedOrDecodedValue(Map<String, String[]> parameterMap) {
+    Optional<Tuple<EncodedOrDecoded, String>> extractEncodedOrDecodedValue(Map<String, String> parameterMap) {
         final List<Triple<EncodedOrDecoded, String, String>> l = Arrays.asList(
                 new Triple<>(EncodedOrDecoded.encoded, "encoded", null),
                 new Triple<>(EncodedOrDecoded.decoded, "decoded", null),
                 new Triple<>(EncodedOrDecoded.decoded, "text", null)
         );
         for (Triple<EncodedOrDecoded, String, String> t : l) {
-            String[] parameterValues = parameterMap.getOrDefault(t.getV(), null);
-            final String parameterValue;
-            if (parameterValues != null && parameterValues.length > 0) {
-                parameterValue = parameterValues[0];
-            } else {
-                parameterValue = null;
-            }
+            final String parameterValue = parameterMap.getOrDefault(t.getV(), null);
             t.setW(parameterValue);
         }
         final Optional<Tuple<EncodedOrDecoded, String>> res = l.stream()

@@ -67,6 +67,7 @@ import net.sourceforge.plantuml.servlet.bootstrap.Snippet.SnippetEntryRepository
 public class PlantUmlServlet1 extends HttpServlet {
 
     private static final String DEFAULT_ENCODED_TEXT = "SyfFKj2rKt3CoKnELR1Io4ZDoSa70000";
+    HttpRequestDumper httpRequestDumper = new HttpRequestDumper();
 
     static {
         OptionFlags.ALLOW_INCLUDE = false;
@@ -104,6 +105,7 @@ public class PlantUmlServlet1 extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
+        this.log(httpRequestDumper.dump(request));
         request.setCharacterEncoding("UTF-8");
 
         final String text = request.getParameter("text");

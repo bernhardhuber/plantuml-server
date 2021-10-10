@@ -23,29 +23,45 @@ import net.sourceforge.plantuml.servlet.UmlDiagramService;
 )
 public class GenericFileFormatServlet extends UmlDiagramService {
 
-    private HttpServletRequest myRequest;
+    // use threadlocal for outputFormat value
+    // as in #getOutputFormat() there is no HttpRequest anymore
+    private static ThreadLocal<String> outputFormatContext = ThreadLocal.withInitial(() -> null);
+    private final HttpRequestDumper httpRequestDumper = new HttpRequestDumper();
 
     @Override
     public FileFormat getOutputFormat() {
-        FileFormat fileFormat = extractFileFormat(myRequest);
+        final String outputFormat = outputFormatContext.get();
+        final FileFormat fileFormat = convertToFileFormat(outputFormat);
         return fileFormat;
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        this.myRequest = request;
-        super.doPost(request, response);
+        this.log(httpRequestDumper.dump(request));
+        try {
+            outputFormatContext.set(request.getParameter("fileFormat"));
+            super.doPost(request, response);
+        } finally {
+            // clean thread local
+            outputFormatContext.remove();
+        }
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        this.myRequest = request;
-        super.doGet(request, response);
+        this.log(httpRequestDumper.dump(request));
+        try {
+            outputFormatContext.set(request.getParameter("fileFormat"));
+            super.doGet(request, response);
+        } finally {
+            // clean thread local
+            outputFormatContext.remove();
+        }
+
     }
 
-    FileFormat extractFileFormat(HttpServletRequest request) {
+    FileFormat convertToFileFormat(String fileFormatAsString) {
         FileFormat fileFormat = FileFormat.PNG;
-        String fileFormatAsString = request.getParameter("fileFormat");
         if (fileFormatAsString != null) {
             try {
                 fileFormat = FileFormat.valueOf(fileFormatAsString);

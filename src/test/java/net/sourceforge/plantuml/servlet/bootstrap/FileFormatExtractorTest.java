@@ -26,7 +26,7 @@ public class FileFormatExtractorTest {
      */
     @Test
     public void testExtractFileFormat_no_matching_name() {
-        final Map<String, String[]> parameterMap = new HashMap<>();
+        final Map<String, String> parameterMap = new HashMap<>();
 
         final FileFormatExtractor instance = new FileFormatExtractor();
 
@@ -40,8 +40,8 @@ public class FileFormatExtractorTest {
      */
     @Test
     public void testExtractFileFormat_fileFormat() {
-        final Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("fileFormat", new String[]{"PNG"});
+        final Map<String, String> parameterMap = new HashMap<>();
+        parameterMap.put("fileFormat", "PNG");
 
         final FileFormatExtractor instance = new FileFormatExtractor();
 
@@ -56,8 +56,8 @@ public class FileFormatExtractorTest {
      */
     @Test
     public void testExtractFileFormat_format() {
-        final Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("format", new String[]{"PNG"});
+        final Map<String, String> parameterMap = new HashMap<>();
+        parameterMap.put("format", "PNG");
 
         final FileFormatExtractor instance = new FileFormatExtractor();
 
