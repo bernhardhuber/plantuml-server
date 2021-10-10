@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import net.sourceforge.plantuml.servlet.bootstrap.EncodedOrDecodedExtractor.EncodedOrDecoded;
-import net.sourceforge.plantuml.servlet.bootstrap.Wrappers.Tuple;
+import net.sourceforge.plantuml.servlet.bootstrap.GenericWrappers.Tuple;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;

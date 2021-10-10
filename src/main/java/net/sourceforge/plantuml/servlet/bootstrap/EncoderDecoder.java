@@ -11,6 +11,7 @@ import net.sourceforge.plantuml.code.Transcoder;
 import net.sourceforge.plantuml.code.TranscoderUtil;
 
 /**
+ * Use plantuml {@link Transcoder} to encode or a decode an uml text.
  *
  * @author berni3
  */
@@ -30,7 +31,7 @@ public class EncoderDecoder {
      * @return
      * @throws EncodeDecoderException
      */
-    String encode(String decodedText) {
+    public String encode(String decodedText) {
         try {
             String encoded = getTranscoder().encode(decodedText);
             return encoded;
@@ -45,7 +46,7 @@ public class EncoderDecoder {
      * @return
      * @throws EncodeDecoderException
      */
-    String decode(String encodedText) {
+    public String decode(String encodedText) {
         try {
             String decoded = getTranscoder().decode(encodedText);
             return decoded;

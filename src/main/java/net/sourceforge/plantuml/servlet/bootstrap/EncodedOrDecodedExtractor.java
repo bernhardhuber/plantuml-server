@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import net.sourceforge.plantuml.servlet.bootstrap.Wrappers.Triple;
-import net.sourceforge.plantuml.servlet.bootstrap.Wrappers.Tuple;
+import net.sourceforge.plantuml.servlet.bootstrap.GenericWrappers.Triple;
+import net.sourceforge.plantuml.servlet.bootstrap.GenericWrappers.Tuple;
 
 /**
  *

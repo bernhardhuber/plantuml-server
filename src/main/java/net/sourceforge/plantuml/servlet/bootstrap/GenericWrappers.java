@@ -9,12 +9,12 @@ package net.sourceforge.plantuml.servlet.bootstrap;
  *
  * @author berni3
  */
-class Wrappers {
+public class GenericWrappers {
 
     public static class Triple<U, V, W> {
 
-        private U u;
-        private V v;
+        private final U u;
+        private final V v;
         private W w;
 
         Triple(U uValue, V vValue, W wValue) {
@@ -42,7 +42,7 @@ class Wrappers {
 
     public static class Tuple<U, V> {
 
-        private U u;
+        private final U u;
         private V v;
 
         Tuple(U uValue, V vValue) {

@@ -8,6 +8,7 @@ package net.sourceforge.plantuml.servlet.bootstrap;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Dump some {@link HttpServletRequest} getter values to a {@link String}.
  *
  * @author berni3
  */

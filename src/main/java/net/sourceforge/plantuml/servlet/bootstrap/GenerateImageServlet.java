@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.servlet.PublicDiagramResponse;
 import net.sourceforge.plantuml.servlet.bootstrap.EncodedOrDecodedExtractor.EncodedOrDecoded;
-import net.sourceforge.plantuml.servlet.bootstrap.Wrappers.Tuple;
+import net.sourceforge.plantuml.servlet.bootstrap.GenericWrappers.Tuple;
 
 /**
  *
@@ -44,14 +44,17 @@ public class GenerateImageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.log(httpRequestDumper.dump(req));
+        req.setCharacterEncoding("UTF-8");
         super.doPost(req, resp); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.log(httpRequestDumper.dump(req));
+        req.setCharacterEncoding("UTF-8");
 
         Map<String, String> mForProcessing = Collections.emptyMap();
+        // handle pathInfo
         if (mForProcessing.isEmpty()) {
             final Map<String, String> mFromPathInfo;
             {
@@ -68,25 +71,31 @@ public class GenerateImageServlet extends HttpServlet {
                 mForProcessing = mFromPathInfo;
             }
         }
+        // handle parameterMap
         if (mForProcessing.isEmpty()) {
-            final Map<String, String> mFromParameterMap = new ConvertRequestParameterMap().xxx(req.getParameterMap());
+            final ConvertRequestParameterMap convertRequestParameterMap = new ConvertRequestParameterMap();
+            final Map<String, String> mFromParameterMap
+                    = convertRequestParameterMap.convertMapFromArrayOfValueToSingleValue(req.getParameterMap());
             if (!mFromParameterMap.isEmpty()) {
                 mForProcessing = mFromParameterMap;
             }
         }
 
         //---
+        // extract decoded uml text
         final String decoded;
-        final Tuple<EncodedOrDecoded, String> umlInput;
         {
             final EncodedOrDecodedExtractor encodedOrDecodedExtractor = new EncodedOrDecodedExtractor();
-            Optional<Tuple<EncodedOrDecoded, String>> xx = encodedOrDecodedExtractor.extractEncodedOrDecodedValue(mForProcessing);
-            umlInput = xx.orElseGet(() -> {
-                String _uml = umlDefault;
-                final Tuple<EncodedOrDecoded, String> _t = new Tuple<>(EncodedOrDecoded.decoded, _uml);
-                return _t;
-            });
+            Optional<Tuple<EncodedOrDecoded, String>> encodedOrDecodedValueOpt
+                    = encodedOrDecodedExtractor.extractEncodedOrDecodedValue(mForProcessing);
 
+            final Tuple<EncodedOrDecoded, String> umlInput
+                    = encodedOrDecodedValueOpt.orElseGet(() -> {
+                        String _uml = umlDefault;
+                        final Tuple<EncodedOrDecoded, String> _t = new Tuple<>(EncodedOrDecoded.decoded, _uml);
+                        return _t;
+                    });
+            // convert if uml text is encoded
             if (umlInput.getU() == EncodedOrDecoded.decoded) {
                 decoded = umlInput.getV();
             } else if (umlInput.getU() == EncodedOrDecoded.encoded) {
@@ -97,11 +106,12 @@ public class GenerateImageServlet extends HttpServlet {
                 decoded = umlDefault;
             }
         }
+        // extract and convert file format
         final FileFormat fileFormat;
         {
             final FileFormatExtractor fileFormatExtractor = new FileFormatExtractor();
-            Optional<FileFormat> yy = fileFormatExtractor.extractFileFormat(mForProcessing);
-            fileFormat = yy.orElse(FileFormat.PNG);
+            final Optional<FileFormat> fileFormatOpt = fileFormatExtractor.extractFileFormat(mForProcessing);
+            fileFormat = fileFormatOpt.orElse(FileFormat.PNG);
         }
         generateAndSendImage(req, resp, decoded, 0, fileFormat);
     }

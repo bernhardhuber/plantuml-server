@@ -10,15 +10,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.sourceforge.plantuml.FileFormat;
-import net.sourceforge.plantuml.servlet.bootstrap.Wrappers.Tuple;
+import net.sourceforge.plantuml.servlet.bootstrap.GenericWrappers.Tuple;
 
 /**
+ * Extract {@link FileFormat}.
  *
  * @author berni3
  */
 class FileFormatExtractor {
 
-    Optional<FileFormat> extractFileFormat(Map<String, String> parameterMap) {
+    public Optional<FileFormat> extractFileFormat(Map<String, String> parameterMap) {
         final List<Tuple<String, FileFormat>> l = Arrays.asList(
                 new Tuple<>("format", null),
                 new Tuple<>("fileFormat", null)
