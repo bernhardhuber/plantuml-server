@@ -31,11 +31,11 @@ public class ConvertRequestParameterMap {
      * @param m source map value
      * @return source map converted to {@code Map<String,String>}
      */
-    Map<String, String> convertMapFromArrayOfValueToSingleValue(Map<String, String[]> m) {
+    public Map<String, String> convertMapFromArrayOfValueToSingleValue(Map<String, String[]> m) {
         final Map<String, String> mFromParameterMap = new HashMap<>();
         // stream implementation variant
         // allow only entries WHERE
-        //   key != null and 
+        //   key != null and
         //   value has at least one value
         m.entrySet().stream()
                 .filter((_e) -> _e.getKey() != null)

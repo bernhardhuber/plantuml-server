@@ -7,7 +7,6 @@ package net.sourceforge.plantuml.servlet.bootstrap;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.servlet.ServletException;
@@ -59,7 +58,8 @@ public class GenerateImageServlet extends HttpServlet {
             final Map<String, String> mFromPathInfo;
             {
                 final String pathInfo = req.getPathInfo();
-                mFromPathInfo = this.extractParametersFromPathInfo(pathInfo);
+                final ConvertPathInfo convertPathInfo = new ConvertPathInfo();
+                mFromPathInfo = convertPathInfo.extractParametersFromPathInfo(pathInfo);
                 this.log(String.format(""
                         + "path info %s%n"
                         + "path info splitted %s%n",
@@ -116,47 +116,11 @@ public class GenerateImageServlet extends HttpServlet {
         generateAndSendImage(req, resp, decoded, 0, fileFormat);
     }
 
-    // TODO /url-path/get,post/params:encoded,format -> image
-    // TODO /url-path/get,post/params:decoded,format -> image
-    // /<servlet>/{format}/encoded
-    // /<servlet>?format={format}&encoded={encoded}
-    // /<servlet>/{format}?encoded={encoded}
-    // /<servlet>/{encoded}?format={format}
-    Map<String, String> extractParametersFromPathInfo(String pathInfo
-    ) {
-        Map<String, String> m = new HashMap<>();
-
-        if (pathInfo != null) {
-            String pathInfoNormalized = pathInfo.trim();
-            if (pathInfoNormalized.startsWith("/")) {
-                pathInfoNormalized = pathInfoNormalized.substring(1);
-            }
-            String[] pathInfoSplit = pathInfoNormalized.split("/", 5);
-            if (pathInfoSplit.length == 1) {
-                final String encoded = pathInfoSplit[0].trim();
-                if (!encoded.isEmpty()) {
-                    m.put("encoded", encoded);
-                }
-            } else if (pathInfoSplit.length == 2) {
-                final String encoded = pathInfoSplit[0].trim();
-                final String fileFormat = pathInfoSplit[1].trim();
-                if (!encoded.isEmpty()) {
-                    m.put("encoded", encoded);
-                }
-                if (!fileFormat.isEmpty()) {
-                    m.put("fileFormat", fileFormat);
-                }
-            }
-        }
-        return m;
-    }
-
     void generateAndSendImage(HttpServletRequest request,
             HttpServletResponse response,
             String uml,
             int idx,
-            FileFormat ff
-    ) {
+            FileFormat ff) {
         try {
             final PublicDiagramResponse diagramResponse = new PublicDiagramResponse(response, ff, request);
             diagramResponse.sendDiagram(uml, idx);
