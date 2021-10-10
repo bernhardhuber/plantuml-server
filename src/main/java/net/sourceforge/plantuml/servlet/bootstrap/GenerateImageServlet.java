@@ -44,14 +44,17 @@ public class GenerateImageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.log(httpRequestDumper.dump(req));
         req.setCharacterEncoding("UTF-8");
-        super.doPost(req, resp); //To change body of generated methods, choose Tools | Templates.
+        generateAndSend(req, resp);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.log(httpRequestDumper.dump(req));
         req.setCharacterEncoding("UTF-8");
+        generateAndSend(req, resp);
+    }
 
+    void generateAndSend(HttpServletRequest req, HttpServletResponse resp) {
         Map<String, String> mForProcessing = Collections.emptyMap();
         // handle pathInfo
         if (mForProcessing.isEmpty()) {
@@ -113,10 +116,10 @@ public class GenerateImageServlet extends HttpServlet {
             final Optional<FileFormat> fileFormatOpt = fileFormatExtractor.extractFileFormat(mForProcessing);
             fileFormat = fileFormatOpt.orElse(FileFormat.PNG);
         }
-        generateAndSendImage(req, resp, decoded, 0, fileFormat);
+        generateImageAndSend(req, resp, decoded, 0, fileFormat);
     }
 
-    void generateAndSendImage(HttpServletRequest request,
+    void generateImageAndSend(HttpServletRequest request,
             HttpServletResponse response,
             String uml,
             int idx,

@@ -15,15 +15,15 @@
 <c:set var="scheme" value="${(not empty header['x-forwarded-proto']) ? header['x-forwarded-proto'] : pageContext.request.scheme}" />
 <c:set var="hostpath" value="${scheme}://${pageContext.request.serverName}${port}${contextroot}" />
 <c:if test="${!empty encoded}">
-    <c:set var="imgurl" value="${hostpath}/png/${encoded}" />
-    <c:set var="svgurl" value="${hostpath}/svg/${encoded}" />
-    <c:set var="txturl" value="${hostpath}/txt/${encoded}" />
+    <c:set var="imgurl" value="${hostpath}/xxx-generate-image/${encoded}" />
+    <c:set var="svgurl" value="${hostpath}/xxx-generate-image/SVG/${encoded}" />
+    <c:set var="txturl" value="${hostpath}/xxx-generate-image/ATXT/${encoded}" />
 
-    <c:set var="epsurl" value="${hostpath}/eps/${encoded}" />
-    <c:set var="epstextturl" value="${hostpath}/epstext/${encoded}" />
+    <c:set var="epsurl" value="${hostpath}/xxx-generate-image/EPS/${encoded}" />
+    <c:set var="epstextturl" value="${hostpath}/xxx-generate-image/EPS_TEXT/${encoded}" />
 
     <c:if test="${!empty mapneeded}">
-        <c:set var="mapurl" value="${hostpath}/map/${encoded}" />
+        <c:set var="mapurl" value="${hostpath}/xxx-generate-image/MAP/${encoded}" />
     </c:if>
 </c:if>
 
@@ -129,7 +129,7 @@
                                     <li><a href="${txturl}" >View as ASCII Art</a></li>
                                     <li><a href="${epsurl}" >View as EPS</a></li>
                                     <li><a href="${epstextturl}" >View as EPS Text</a></li>
-                                    <li><a href="${hostpath}/map/${encoded}" >View as HTML Map</a></li>
+                                    <li><a href="${hostpath}/MAP/${encoded}" >View as HTML Map</a></li>
 
                                     <c:if test="${!empty mapurl}">
                                         <li><a href="${mapurl}" >View Map Data</a></li>
@@ -145,7 +145,8 @@
                             <p>
                                 Choose more alternate formats:
                             </p>
-                            <form method="GET" action="${hostpath}/genericfileformat/${encoded}">
+                            <form method="POST" action="${hostpath}/xxx-generate-image">
+                                <input type="hidden" name="encoded" value="${encoded}"/>
                                 <div class="form-group">
                                     <label for="fileFormat">File Format</label>
 
