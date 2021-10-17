@@ -37,7 +37,9 @@ public class EncodeDecodeServlet extends HttpServlet {
         this.log(httpRequestDumper.dump(req));
         req.setCharacterEncoding("UTF-8");
         final ConvertRequestParameterMap convertRequestParameterMap = new ConvertRequestParameterMap();
-        final Map<String, String> mFromParameterMap = convertRequestParameterMap.convertMapFromArrayOfValueToSingleValue(req.getParameterMap());
+        final Map<String, String> mFromParameterMap
+                = convertRequestParameterMap
+                        .convertMapFromArrayOfValueToSingleValue(req.getParameterMap());
         encodeOrDecodeAndSendResponse(req, resp, mFromParameterMap);
     }
 
@@ -47,7 +49,8 @@ public class EncodeDecodeServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         final ConvertRequestParameterMap convertRequestParameterMap = new ConvertRequestParameterMap();
         final Map<String, String> mFromParameterMap
-                = convertRequestParameterMap.convertMapFromArrayOfValueToSingleValue(req.getParameterMap());
+                = convertRequestParameterMap
+.convertMapFromArrayOfValueToSingleValue(req.getParameterMap());
         encodeOrDecodeAndSendResponse(req, resp, mFromParameterMap);
     }
 

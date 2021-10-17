@@ -54,6 +54,13 @@ public class GenerateImageServlet extends HttpServlet {
         generateAndSend(req, resp);
     }
 
+    /**
+     * Extract image generation parameter and invoke image generation and
+     * http-response sending.
+     *
+     * @param req
+     * @param resp
+     */
     void generateAndSend(HttpServletRequest req, HttpServletResponse resp) {
         Map<String, String> mForProcessing = Collections.emptyMap();
         // handle pathInfo
@@ -85,7 +92,7 @@ public class GenerateImageServlet extends HttpServlet {
         }
 
         //---
-        // extract decoded uml text
+        // extract encoded or decoded uml text
         final String decoded;
         {
             final EncodedOrDecodedExtractor encodedOrDecodedExtractor = new EncodedOrDecodedExtractor();
@@ -94,14 +101,13 @@ public class GenerateImageServlet extends HttpServlet {
 
             final Tuple<EncodedOrDecoded, String> umlInput
                     = encodedOrDecodedValueOpt.orElseGet(() -> {
-                        String _uml = umlDefault;
-                        final Tuple<EncodedOrDecoded, String> _t = new Tuple<>(EncodedOrDecoded.decoded, _uml);
-                        return _t;
+                        return new Tuple<>(EncodedOrDecoded.decoded, umlDefault);
                     });
-            // convert if uml text is encoded
+            // convert if extract decoded uml text from Tuple
             if (umlInput.getU() == EncodedOrDecoded.decoded) {
                 decoded = umlInput.getV();
             } else if (umlInput.getU() == EncodedOrDecoded.encoded) {
+                // decode encoded input
                 final String encoded = umlInput.getV();
                 final EncoderDecoder encoderDecoder = new EncoderDecoder();
                 decoded = encoderDecoder.decode(encoded);
@@ -119,6 +125,15 @@ public class GenerateImageServlet extends HttpServlet {
         generateImageAndSend(req, resp, decoded, 0, fileFormat);
     }
 
+    /**
+     * Generate image from uml text, and sent it as http-response.
+     *
+     * @param request
+     * @param response
+     * @param uml plain plantuml text
+     * @param idx
+     * @param ff specifies the response format like PNG, SVG, etc.
+     */
     void generateImageAndSend(HttpServletRequest request,
             HttpServletResponse response,
             String uml,
