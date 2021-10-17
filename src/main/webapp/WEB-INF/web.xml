@@ -6,11 +6,11 @@
     metadata-complete="false"
     version="3.1">
 <display-name>plantuml</display-name>
-    <context-param>
+    <!--context-param>
         <param-name>org.eclipse.jetty.servlet.Default.welcomeServlets</param-name>
         <param-value>exact</param-value>
-    </context-param>
-    <servlet>
+    </context-param-->
+    <!--servlet>
         <servlet-name>jsp</servlet-name>
         <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
         <init-param>
@@ -21,7 +21,7 @@
             <param-name>compilerTargetVM</param-name>
             <param-value>1.8</param-value>
         </init-param>
-    </servlet>
+    </servlet-->
     <servlet>
         <servlet-name>plantumlservlet</servlet-name>
         <servlet-class>net.sourceforge.plantuml.servlet.PlantUmlServlet</servlet-class>
