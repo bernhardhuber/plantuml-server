@@ -42,26 +42,31 @@
         <script src="${contextroot}/resource/zlib/rawinflate.js"></script>
 
         <script>
+            var encode = (function () {
+                return function encode(s) {
+                    //UTF8
+                    var sAsUnescaped = unescape(encodeURIComponent(s));
+                    var sEncoded = encode64(deflate(sAsUnescaped, 9));
+                    return sEncoded;
+                };
+            })();
             var compress = (function () {
                 var umlDefault = "@startuml\n"
                         + "Alice -> Bob : Hello\n"
                         + "@enduml";
-                var imgPngUrl = "${contextroot}" + "/png/";
-                var imgSvgUrl = "${contextroot}" + "/svg/";
-                
+                var imgPngUrl = "${contextroot}" + "/xxx-generate-image/PNG/${encoded}";
+                var imgSvgUrl = "${contextroot}" + "/xxx-generate-image/SVG/${encoded}";
+
                 var umlTextId = 'umltext';
                 var umlImageId = 'umlimage';
 
                 return function compress() {
                     // save codeMirror-text in textArea
                     myCodeMirror.save();
-                    
+
                     var textAreaElement = document.getElementById(umlTextId);
                     var s = textAreaElement.value
-
-                    //UTF8
-                    var sAsUnescaped = unescape(encodeURIComponent(s));
-                    var sEncoded = encode64(deflate(sAsUnescaped, 9));
+                    var sEncoded = encode(s);
                     var imgUrl = imgPngUrl;
                     var imgElement = document.getElementById(umlImageId);
                     imgElement.src = imgUrl + sEncoded;
@@ -112,6 +117,20 @@
                         <p id="encoded">Encoded diagram<br/>Lorem ipsum...</p>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="col-md-12">
+
+                <button id="toggleButton">Toggle</button>
+                <p>Hello</p>
+                <p style="display: none">Good Bye</p>
+
+                <script>
+                    $("#toggleButton").click(function () {
+                        $("p").toggle();
+                    });
+                </script>
             </div>
         </div>
     </body>
